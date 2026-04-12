@@ -1,0 +1,649 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Kaushan+Script&family=Lobster&family=Monoton&family=Handlee&family=Foldit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tourney:wdth,wght@125,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Handlee&family=Roboto+Slab:wght@100..900&family=Special+Elite&display=swap');
+@import "tailwindcss";
+
+
+
+
+/* ═══════════════════════════════════════════
+   THEME VARIABLES
+═══════════════════════════════════════════ */
+:root {
+  --accent: #00ff88;
+  --accent-mid: #00cc6a;
+  --accent-dim: rgba(0, 255, 136, 0.35);
+  --accent-glow: rgba(0, 255, 136, 0.12);
+  --bg: #030712;
+  --bg-card: #0d1117;
+  --bg-card2: #111827;
+  --text: #f0f6fc;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --nav-h: 64px;
+  --shadow-accent: 0 0 40px rgba(0, 255, 136, 0.2);
+}
+
+[data-theme="light"] {
+  --accent: #059669;
+  --accent-mid: #047857;
+  --accent-dim: rgba(5, 150, 105, 0.25);
+  --accent-glow: rgba(5, 150, 105, 0.10);
+  --bg: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card2: #f1f5f9;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --border: rgba(0, 0, 0, 0.10);
+  --shadow-accent: 0 0 40px rgba(5, 150, 105, 0.15);
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* Issue #10: Hide default cursor everywhere */
+  cursor: none !important;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+  /* Observer controls scrolling */
+}
+
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Playfair Display', serif;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   PANEL SYSTEM — CodePen XWzRraJ pattern
+═══════════════════════════════════════════ */
+.panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.panel-outer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.panel-inner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Last panel (contact+footer) needs vertical scroll */
+.panel-inner.scrollable {
+  overflow-y: auto;
+}
+
+/* ═══════════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════════ */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  will-change: transform;
+  color: var(--accent);
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  mix-blend-mode: difference;
+  will-change: transform;
+  /* overflow: visible; */
+}
+
+
+
+.cursor-dot,
+.cursor-ring,
+.cursor-fill {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  z-index: 9999;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+.cursor-ring{
+  height: 42px;
+  width:42px;
+  /* border: 1px solid var(--accent); */
+
+}
+
+.cursor-fill {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  /* background: white; */
+  border: none;
+  opacity: 0;
+  transform: scale(0);
+  transform: translate(-50%, -50%);
+}
+
+/* ═══════════════════════════════════════════
+   NOISE OVERLAY
+═══════════════════════════════════════════ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 9997;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════ */
+.nav-glass {
+  background: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .nav-glass {
+  background: rgba(248, 250, 252, 0.85);
+}
+
+/* Letter-flip nav link */
+.nav-btn {
+  position: relative;
+  overflow: hidden;
+  height: 1.4em;
+  font-family: 'Audiowide', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  padding: 0 2px;
+  transition: color 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-btn.active {
+  color: var(--accent);
+}
+
+.nav-btn:hover {
+  color: var(--accent);
+}
+
+/* underline bar */
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+
+.nav-btn.active::after,
+.nav-btn:hover::after {
+  width: 100%;
+}
+
+/* rows of chars */
+.nav-btn .row-a,
+.nav-btn .row-b {
+  display: flex;
+  align-items: center;
+}
+
+.nav-btn .row-b {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.nav-char {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Mobile menu */
+.mobile-menu {
+  transform: translateX(100%);
+  will-change: transform;
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS DOTS
+═══════════════════════════════════════════ */
+.section-progress {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 500;
+}
+
+.progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 1px solid var(--accent-dim);
+  transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  transform: scale(1.6);
+}
+
+/* ═══════════════════════════════════════════
+   GRID PATTERN BACKGROUND
+═══════════════════════════════════════════ */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════
+   ORB / GLOW
+═══════════════════════════════════════════ */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero-tag {
+  color: var(--accent);
+  opacity: 0.45;
+  font-family: 'Audiowide', monospace;
+  font-size: 13px;
+}
+
+/* ═══════════════════════════════════════════
+   SKILLS — MARQUEE
+═══════════════════════════════════════════ */
+.marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-track.running-l {
+  animation: marqL 28s linear infinite;
+}
+
+.marquee-track.running-r {
+  animation: marqR 28s linear infinite;
+}
+
+.marquee-track.paused {
+  animation-play-state: paused !important;
+}
+
+@keyframes marqL {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    /* transform: translateX(-50%); */
+    transform: translateX(-33.333%);
+  }
+}
+
+@keyframes marqR {
+  from {
+    /* transform: translateX(-50%); */
+    transform: translateX(-33.333%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.skill-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 16px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+}
+
+.skill-pill:hover {
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+
+/* ═══════════════════════════════════════════
+   PROJECTS
+═══════════════════════════════════════════ */
+.proj-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.proj-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-accent);
+  border-color: var(--accent-dim);
+}
+
+.proj-card .card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.proj-card:hover .card-img {
+  transform: scale(1.05);
+}
+
+.proj-img-wrap {
+  overflow: hidden;
+  height: 180px;
+}
+
+/* Spinning border on hover */
+@keyframes spin-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.proj-card .spin-border {
+  position: absolute;
+  inset: -1500%;
+  opacity: 0;
+  background: conic-gradient(from 0deg, transparent 0%, var(--accent) 15%, transparent 30%);
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.proj-card:hover .spin-border {
+  opacity: 0.6;
+  animation: spin-border 3.5s linear infinite;
+}
+
+.proj-card .card-inner {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-card);
+  margin: 1px;
+  border-radius: 15px;
+}
+
+/* Nav-style link animation in project cards */
+.proj-link {
+  position: relative;
+  overflow: hidden;
+  height: 1.3em;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: 'Audiowide', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.proj-link .row-a,
+.proj-link .row-b {
+  display: flex;
+  align-items: center;
+}
+
+.proj-link .row-b {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+/* ═══════════════════════════════════════════
+   FORM INPUTS
+═══════════════════════════════════════════ */
+.form-input {
+  width: 100%;
+  background: var(--accent-glow);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: 'Handlee', cursive;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  background: rgba(0, 255, 136, 0.06);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Light theme form fix */
+[data-theme="light"] .form-input {
+  background: rgba(5, 150, 105, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .form-input:focus {
+  background: rgba(5, 150, 105, 0.08);
+}
+
+/* ═══════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Issue #9
+═══════════════════════════════════════════ */
+[data-theme="light"] .nav-glass {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .skill-pill {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .proj-card {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .proj-card .card-inner {
+  background: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-dim);
+  border-radius: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-dim) var(--bg);
+}
+
+/* ═══════════════════════════════════════════
+   SELECTION
+═══════════════════════════════════════════ */
+::selection {
+  background: var(--accent-dim);
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════════════
+   LOADER  — Issue #1
+═══════════════════════════════════════════ */
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.loader-bar-wrap {
+  width: 220px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* ═══════════════════════════════════════════
+   SPLIT TEXT CHARS
+═══════════════════════════════════════════ */
+.char,
+.word {
+  display: inline-block;
+}
+
+/* ═══════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════ */
+.toggle-pill {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--border);
+  border: 1px solid var(--accent-dim);
+  position: relative;
+  transition: background 0.3s;
+}
+
+.toggle-pill::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.3s;
+}
+
+[data-theme="light"] .toggle-pill::after {
+  transform: translateX(20px);
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root {
+    --nav-h: 56px;
+  }
+
+  .section-progress {
+    display: none;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}

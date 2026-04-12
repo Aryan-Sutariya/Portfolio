@@ -1,0 +1,567 @@
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import gsap from "gsap";
+import { SplitText } from "gsap/all";
+import { RiGithubFill, RiExternalLinkFill } from "@remixicon/react";
+
+gsap.registerPlugin(SplitText);
+
+/* ── 10 Projects ── */
+const PROJECTS = [
+  {
+    id: "01", title: "Niramay Ayurvedic Clinic", subtitle: "Appointment Booking System",
+    tags: ["React", "Node.js", "Neon DB", "Vercel"],
+    desc: "Developed a full-stack appointment booking system for an Ayurvedic clinic, featuring real-time slot availability, WhatsApp-based booking confirmation, and an admin dashboard for appointment management.",
+    img: "./niramay.png",
+    github: "https://github.com/stationofdeveloper/Niramay",
+    live: "https://niramay-clinic.vercel.app/",
+  },
+  {
+    id: "02", title: "E-commerce App", subtitle: "Full-stack Storefront",
+    tags: ["React", "Vite", "localStorage"],
+    desc: "Modern React e-commerce front-end with authentication, admin panel, product browsing, and cart — built for a fashion retail experience.",
+    img: "./ecommerce.png",
+    github: "https://github.com/Aryan-Sutariya/Clone-Projects-for-Practice/tree/mono-clone",
+    live: "https://monobyaryan.netlify.app/",
+  },
+  {
+    id: "03", title: "Movie App", subtitle: "Discovery Platform",
+    tags: ["React", "React Router", "TMDB API"],
+    desc: "Responsive movie & TV show discovery app with trending content, dynamic detail pages, and trailer support powered by TMDB API.",
+    img: "./movieapp.png",
+    github: "https://github.com/Aryan-Sutariya/Movie-app",
+    live: "https://movieappbyaryan.netlify.app/",
+  },
+  {
+    id: "04", title: "Refokus Clone", subtitle: "Creative Agency Landing",
+    tags: ["React", "Framer Motion", "Locomotive Scroll"],
+    desc: "Animated creative agency landing page with motion-rich micro-interactions, smooth scroll effects, and bold visual hierarchy.",
+    img: "./refokus.png",
+    github: "https://github.com/Aryan-Sutariya/Clone-Projects-for-Practice/tree/refokus-clone",
+    live: "https://refokusworkbyaryan.netlify.app/",
+  },
+  {
+    id: "05", title: "InterVue AI", subtitle: "AI Interview Prep",
+    tags: ["Next.js", "Vapi API", "Vercel"],
+    desc: "AI-powered interview & viva preparation platform that simulates technical and HR interviews, evaluates answers, and provides instant feedback.",
+    img: "./intervuee.png",
+    github: "https://github.com/Aryan-Sutariya",
+    live: "https://intervuee.vercel.app/",
+  },
+  {
+    id: "06", title: "Ayubot", subtitle: "Medicine search Engine",
+    tags: ["Java Script", "Netlify"],
+    desc: "Clean weather dashboard with real-time data, 7-day forecast, location detection, and animated weather icons.",
+    img: "./aayubot.png",
+    github: "https://github.com/Aryan-Sutariya",
+    live: "https://aayubotbyaryan.netlify.app/",
+  },
+  // {
+  //   id: "06", title: "Niramay Ayurvedic Clinic", subtitle: "Appointment Booking System",
+  //   tags: ["React", "Node.js","Neon DB","Vercel"],
+  //   desc: "Developed a full-stack appointment booking system for an Ayurvedic clinic, featuring real-time slot availability, WhatsApp-based booking confirmation, and an admin dashboard for appointment management.",
+  //   img: "./niramay.png",
+  //   github: "https://github.com/stationofdeveloper/Niramay",
+  //   live: "https://niramay-clinic.vercel.app/",
+  // },
+  // {
+  //   id: "07", title: "Task Manager", subtitle: "Productivity Tool",
+  //   tags: ["React", "Redux", "Firebase"],
+  //   desc: "Drag-and-drop kanban task manager with real-time sync, categories, priorities, and deadline tracking.",
+  //   img: "https://picsum.photos/seed/taskmanager2025/800/600",
+  //   github: "https://github.com/Aryan-Sutariya",
+  //   live: "https://github.com/Aryan-Sutariya",
+  // },
+  // {
+  //   id: "08", title: "Blog Platform", subtitle: "Content Management",
+  //   tags: ["Next.js", "MDX", "Tailwind"],
+  //   desc: "Full-featured blog platform with MDX support, dark mode, syntax highlighting, and SEO optimization.",
+  //   img: "https://picsum.photos/seed/blogplatform2025/800/600",
+  //   github: "https://github.com/Aryan-Sutariya",
+  //   live: "https://github.com/Aryan-Sutariya",
+  // },
+  // {
+  //   id: "09", title: "Quiz App", subtitle: "Learning Platform",
+  //   tags: ["React", "OpenTDB API", "Context"],
+  //   desc: "Interactive quiz app with categories, difficulty levels, timer, leaderboard, and animated results.",
+  //   img: "https://picsum.photos/seed/quizapp2025/800/600",
+  //   github: "https://github.com/Aryan-Sutariya",
+  //   live: "https://github.com/Aryan-Sutariya",
+  // },
+  // {
+  //   id: "10", title: "Finance Tracker", subtitle: "Personal Finance",
+  //   tags: ["React", "Chart.js", "localStorage"],
+  //   desc: "Personal finance tracker with income/expense management, category breakdowns, and interactive charts.",
+  //   img: "https://picsum.photos/seed/finance2025/800/600",
+  //   github: "https://github.com/Aryan-Sutariya",
+  //   live: "https://github.com/Aryan-Sutariya",
+  // },
+];
+
+/* ── Updated FlipLink — timeline-based animation ── */
+const FlipLink = ({ label, href, icon: Icon }) => {
+  const ref = useRef();
+  const tlRef = useRef();
+  const chars = label.split("");
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const tops = ref.current.querySelectorAll(".fl-top");
+    const bots = ref.current.querySelectorAll(".fl-bot");
+
+    tlRef.current = gsap.timeline({ paused: true })
+      .to(tops, {
+        yPercent: -100,
+        stagger: 0.03,
+        duration: 0.3,
+        ease: "power2.inOut",
+      })
+      .fromTo(
+        bots,
+        { yPercent: 100 },
+        { yPercent: -90, stagger: 0.03, duration: 0.3, ease: "power2.inOut" },
+        0
+      );
+
+    return () => { tlRef.current?.kill(); };
+  }, []);
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => tlRef.current?.play()}
+      onMouseLeave={() => tlRef.current?.reverse()}
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        textDecoration: "none",
+        padding: "6px 13px",
+        borderRadius: 8,
+        background: "rgba(255,255,255,0.07)",
+        border: "1px solid rgba(255,255,255,0.15)",
+        backdropFilter: "blur(6px)",
+        transition: "background 0.2s, border-color 0.2s",
+      }}
+    >
+      <span style={{
+        position: "relative",
+        overflow: "hidden",
+        height: "1.2em",
+        display: "flex",
+        alignItems: "center",
+      }}>
+        <span style={{ display: "flex" }}>
+          {chars.map((c, i) => (
+            <span key={i} className="fl-top" style={{
+              display: "inline-block", whiteSpace: "pre",
+              fontFamily: "'Inter', sans-serif", /* CHANGED FONT FAMILY HERE */
+              fontSize: 10,
+              letterSpacing: "0.15em", textTransform: "uppercase",
+              color: "var(--accent)",
+            }}>{c}</span>
+          ))}
+        </span>
+        <span style={{ position: "absolute", top: 0, left: 0, display: "flex" }}>
+          {chars.map((c, i) => (
+            <span key={i} className="fl-bot" style={{
+              display: "inline-block", whiteSpace: "pre",
+              transform: "translateY(100%)",
+              fontFamily: "'Inter', sans-serif", /* CHANGED FONT FAMILY HERE */
+              fontSize: 10,
+              letterSpacing: "0.15em", textTransform: "uppercase",
+              color: "var(--accent)",
+            }}>{c}</span>
+          ))}
+        </span>
+      </span>
+      <Icon style={{ width: 11, height: 11, color: "var(--accent)", flexShrink: 0 }} />
+    </a>
+  );
+};
+
+/* ── Arrow Button ── */
+const ArrowBtn = ({ dir, onClick, disabled }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: 44, height: 44, borderRadius: "50%",
+        border: `1.5px solid ${hovered && !disabled ? "var(--accent)" : "rgba(255,255,255,0.2)"}`,
+        background: hovered && !disabled ? "var(--accent-glow)" : "rgba(255,255,255,0.04)",
+        color: disabled ? "rgba(255,255,255,0.2)" : hovered ? "var(--accent)" : "rgba(255,255,255,0.65)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        cursor: disabled ? "not-allowed" : "pointer",
+        transition: "all 0.25s ease",
+        backdropFilter: "blur(8px)",
+        outline: "none",
+        flexShrink: 0,
+      }}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        {dir === "left"
+          ? <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          : <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        }
+      </svg>
+    </button>
+  );
+};
+
+/* ── Single Project Card ── */
+const ProjectCard = ({ project, offset, isCenter, onCardClick }) => {
+  const absOffset = Math.abs(offset);
+
+  // Responsive card width from CSS var
+  const CARD_STEP = 102; // percent of card width per step
+  const translateX = offset * CARD_STEP;
+  const rotateY = offset * -18;
+  const scale = isCenter ? 1 : 1 - absOffset * 0.15;
+  const translateZ = isCenter ? 0 : -absOffset * 0;
+  const opacity = absOffset > 3 ? 0 : absOffset > 2 ? 0.4 : 1;
+  const zIndex = isCenter ? 20 : 10 - absOffset;
+
+  return (
+    <div
+      onClick={() => !isCenter && absOffset <= 2 && onCardClick(offset)}
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "var(--card-w, min(300px,76vw))",
+        height: "var(--card-h, min(430px,68vh))",
+        transform: `
+          translate(-50%, -50%)
+          translateX(${translateX}%)
+          perspective(1100px)
+          rotateY(${rotateY}deg)
+          scale(${scale})
+          translateZ(${translateZ}px)
+        `,
+        opacity,
+        zIndex,
+        transition: "transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.55s ease",
+        pointerEvents: opacity > 0 ? "all" : "none",
+        cursor: isCenter ? "default" : absOffset <= 2 ? "pointer" : "default",
+        borderRadius: 10,
+        overflow: "",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Spin border — center card only */}
+      {isCenter && (
+        <>
+          <div style={{
+            position: "absolute", inset: -2, borderRadius: 18,
+            zIndex: 30, pointerEvents: "none",
+            background: "conic-gradient(from var(--spin-angle,0deg), transparent 0%, var(--accent) 18%, transparent 36%)",
+            animation: "spinBorder 2.8s linear infinite",
+            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            padding: 2,
+          }} />
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 16,
+            boxShadow: "0 0 32px 4px var(--accent-glow), 0 0 70px 10px var(--accent-glow)",
+            zIndex: 25, pointerEvents: "none",
+            border: "1.5px solid var(--accent-dim)",
+          }} />
+        </>
+      )}
+
+      {/* Image */}
+      <div className="relative w-full h-1/2" >
+        <div className="absolute h-full w-full" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(0, 0, 0, 0.8) 20%, rgba(255, 255, 255, 0) 40%, transparent 100%)" }}>
+        </div>
+        <img
+          src={project.img}
+          alt={project.title}
+          style={{
+            width: "100%", height: "100%",
+            objectFit: "cover", display: "block",
+            borderRadius: 16,
+            transition: "transform 0.55s ease",
+            // background: "linear-gradient(to top, rgba(3, 3, 3, 1) 0%, rgba(21, 194, 93, 0.72) 45%, transparent 100%)",
+            zIndex: -1
+          }}
+          loading="lazy"
+          onError={(e) => { e.target.src = `https://picsum.photos/seed/${project.id}/800/600`; }}
+        />
+      </div>
+
+      {/* Gradient overlay content - ADDED DYNAMIC CLASS FOR ANIMATION & BLUR */}
+      <div
+        className={`project-info ${isCenter ? 'active' : 'inactive'}`}
+        style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          height: "60%",
+          background: "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.72) 45%, transparent 100%)",
+          borderRadius: "0 0 16px 16px",
+          display: "flex", flexDirection: "column",
+          justifyContent: "flex-end",
+          padding: "20px 18px",
+          gap: 8,
+          zIndex: 5,
+        }}
+      >
+        {/* ID number watermark */}
+        <span style={{
+          fontFamily: "Tourney",
+          fontSize: 48, fontWeight: 700,
+          color: "var(--accent)", opacity: 0.3,
+          lineHeight: 1,
+          position: "absolute", top: 0, right: 14,
+          userSelect: "none",
+        }}>{project.id}</span>
+
+        {/* Title & Subtitle */}
+        <div>
+          <h3 style={{
+            fontFamily: "'Roboto Slab'",
+            fontSize: "clamp(11px, 1.3vw, 14px)",
+            color: "#fff", letterSpacing: "0.04em", marginBottom: 3,
+          }}>{project.title}</h3>
+          <p style={{
+            fontFamily: "'Handlee'", fontSize: 11,
+            color: "var(--accent)", letterSpacing: "0.12em",
+            textTransform: "uppercase", opacity: 0.85,
+          }}
+          >{project.subtitle}</p>
+        </div>
+
+        {/* Tags */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+          {project.tags.map((tag) => (
+            <span key={tag} style={{
+              padding: "2px 9px", borderRadius: 999,
+              background: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(255,255,255,0.14)",
+              fontFamily: "'Handlee'", fontSize: 10,
+              color: "rgba(255,255,255,0.65)",
+              letterSpacing: '1px'
+            }}>{tag}</span>
+          ))}
+        </div>
+
+        {/* Description */}
+        <p style={{
+          fontFamily: "'Roboto Slab'",
+          fontSize: "clamp(13px, 0.95vw, 12px)",
+          color: "rgba(255, 255, 255, 0.8)", lineHeight: 1.6,
+          letterSpacing: '1px'
+        }}>{project.desc}</p>
+
+        {/* Links */}
+        <div style={{ display: "flex", gap: 8, fontFamily: "'Eater'" }}>
+          <FlipLink label="GitHub" href={project.github} icon={RiGithubFill} />
+          <FlipLink label="Live" href={project.live} icon={RiExternalLinkFill} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── Main Projects Section ── */
+const Projects = () => {
+  const containerRef = useRef();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showDrag, setShowDrag] = useState(false);
+
+  const dragStartX = useRef(null);
+  const isDraggingRef = useRef(false);
+
+  const navigate = useCallback((dir) => {
+    setActiveIndex((prev) => Math.max(0, Math.min(PROJECTS.length - 1, prev + dir)));
+  }, []);
+
+  /* Drag / swipe handlers */
+  const handlePointerDown = (e) => {
+    dragStartX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    isDraggingRef.current = true;
+  };
+
+  const handlePointerUp = useCallback((e) => {
+    if (!isDraggingRef.current || dragStartX.current === null) return;
+    const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    const diff = dragStartX.current - endX;
+    if (Math.abs(diff) > 45) navigate(diff > 0 ? 1 : -1);
+    dragStartX.current = null;
+    isDraggingRef.current = false;
+  }, [navigate]);
+
+  /* Section-enter animation */
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail.index !== 2) return;
+      const dir = e.detail.direction;
+      const split = SplitText.create(".projects-title", { type: "chars" });
+      gsap.from(split.chars, {
+        y: dir * 80, opacity: 0,
+        rotation: () => gsap.utils.random(-25, 25),
+        scale: 0.3,
+        stagger: { each: 0.05, from: "random" },
+        duration: 1, ease: "back.out(1.7)",
+        delay: 0.5
+      });
+      gsap.from(".proj-label", { y: dir * 20, opacity: 0, duration: 1, delay: 1.3, ease: "power3.out" });
+      gsap.from(".proj-carousel", { y: dir * 60, opacity: 0, duration: 1, delay: 1, ease: "power3.out" });
+      gsap.from(".proj-arrows", { y: dir * 20, opacity: 0, duration: 1, delay: 1, ease: "power3.out" });
+    };
+    window.addEventListener("section-enter", handler);
+    return () => window.removeEventListener("section-enter", handler);
+  }, []);
+
+  return (
+    <section
+      ref={containerRef}
+      style={{
+        width: "100%", height: "100%",
+        background: "var(--bg)",
+        display: "flex", flexDirection: "column", alignItems: "center",
+        position: "relative", overflow: "hidden",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Styles */}
+      <style>{`
+        @property --spin-angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+        @keyframes spinBorder {
+          from { --spin-angle: 0deg; }
+          to   { --spin-angle: 360deg; }
+        }
+        /* Card widths — responsive */
+        :root {
+          --card-w: min(300px, 74vw);
+          --card-h: min(430px, 60vh);
+        }
+        @media (max-width: 600px) {
+          :root {
+            --card-w: min(75vw, 82vw);
+            --card-h: min(58vh, 75vh);
+          }
+          
+          /* ADDED FOR MOBILE BLUR & ANIMATION */
+          .project-info.inactive {
+            filter: blur(5px);
+            opacity: 0.4;
+            transform: translateY(20px);
+            pointer-events: none;
+          }
+          .project-info.active {
+            filter: blur(0px);
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+          }
+        }
+        
+        /* ADDED TRANSITION FOR ALL SCREEN SIZES TO ALLOW SMOOTH ANIMATION */
+        .project-info {
+          transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+
+        @media (min-width: 1024px) {
+          :root {
+            --card-w: 360px;
+            --card-h: 440px;
+          }
+        }
+        /* Image zoom on center card hover */
+        .proj-carousel:hover .center-card img {
+          transform: scale(1.04);
+        }
+        /* Flip-link hover glow */
+        a[data-fliplink]:hover {
+          background: var(--accent-glow) !important;
+          border-color: var(--accent-dim) !important;
+        }
+      `}</style>
+
+      {/* Ambient orb */}
+      <div style={{
+        position: "absolute",
+        width: 500, height: 500,
+        top: "15%", right: "3%",
+        background: "radial-gradient(circle, var(--accent), transparent 70%)",
+        opacity: 0.05, borderRadius: "50%", pointerEvents: "none",
+      }} />
+      <div className="grid-bg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
+
+      {/* Header */}
+      <div style={{
+        width: "100%", zIndex: 10,
+        padding: "calc(var(--nav-h) + 16px) 24px 12px",
+        textAlign: "center", background: "var(--bg)", flexShrink: 0,
+      }}>
+        <p className="proj-label" style={{
+          fontFamily: "'Handlee', cursive", fontSize: 12,
+          letterSpacing: "0.4em", textTransform: "uppercase",
+          color: "var(--accent)", marginBottom: 8,
+        }}>— Selected Work —</p>
+        <h2 className="projects-title" style={{
+          fontFamily: "'Monoton', sans-serif",
+          fontSize: "clamp(1.8rem, 6vw, 5rem)",
+          color: "var(--text)", lineHeight: 1.1,
+        }}>PROJECTS</h2>
+      </div>
+
+      {/* ── Carousel ── */}
+      <div
+        className="proj-carousel"
+        onMouseEnter={() => setShowDrag(true)}
+        onMouseLeave={() => setShowDrag(false)}
+        onMouseDown={handlePointerDown}
+        onMouseUp={handlePointerUp}
+        onTouchStart={handlePointerDown}
+        onTouchEnd={handlePointerUp}
+        style={{
+          flex: 1, width: "100%", minHeight: 0,
+          position: "relative", overflow: "",
+          zIndex: 10, cursor: "grab",
+          userSelect: "none",
+          touchAction: "pan-y", /* CHANGED: Added touchAction to fix vertical scroll bug during horizontal swiping */
+        }}
+      >
+        {/* Cards */}
+        {PROJECTS.map((project, i) => {
+          const offset = i - activeIndex;
+          return (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              offset={offset}
+              isCenter={offset === 0}
+              onCardClick={(off) => navigate(off > 0 ? 1 : -1)}
+            />
+          );
+        })}
+      </div>
+
+      {/* Navigation row */}
+      <div
+        className="proj-arrows"
+        style={{
+          display: "flex", alignItems: "center", gap: 14,
+          padding: "14px 24px 16px", zIndex: 10, flexShrink: 0,
+        }}
+      >
+        <ArrowBtn dir="left" onClick={() => navigate(-1)} disabled={activeIndex === 0} />
+        <ArrowBtn dir="right" onClick={() => navigate(1)} disabled={activeIndex === PROJECTS.length - 1} />
+      </div>
+    </section>
+  );
+};
+
+export default Projects;
