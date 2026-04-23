@@ -141,7 +141,7 @@ const Navbar = ({ currentIndex, onNavigate, theme, toggleTheme }) => {
     tlMenu.current = gsap.timeline({ paused: true })
       .set(menuRef.current, { display: "flex" })
       .to(menuRef.current, { x: 0, duration: 0.5, ease: "power3.inOut" })
-      .from(".mob-link", { x: 30, opacity: 0, stagger: 0.05, duration: 0.3 }, "-=0.2");
+      .from(".mob-link", { x: 30, opacity: 0, stagger: 0.15, duration: 0.3 }, "-=0.2");
   }, { scope: container });
 
   const toggleMenu = contextSafe((state) => {
@@ -168,7 +168,17 @@ const Navbar = ({ currentIndex, onNavigate, theme, toggleTheme }) => {
       {/* ── Laptop/Tablet Links: Hidden on Mobile (md:flex) ── */}
       <div className="hidden md:flex items-center gap-8 font-['Audiowide'] ">
         {NAV_ITEMS.map(({ label, index }) => (
-          <NavBtn key={label} label={label} isActive={currentIndex === index} onClick={() => onNavigate(index)} />
+          <NavBtn 
+            key={label} 
+            label={label} 
+            isActive={currentIndex === index} 
+            onClick={() => {
+              // FIX: Only trigger navigation if the link isn't already active
+              if (currentIndex !== index) {
+                onNavigate(index);
+              }
+            }} 
+          />
         ))}
       </div>
 
@@ -208,7 +218,7 @@ const Navbar = ({ currentIndex, onNavigate, theme, toggleTheme }) => {
         ref={menuRef}
         style={{
           position: "fixed", top: 0, right: 0, transform: "translateX(100%)",
-          width: "300px", height: "100vh", zIndex: 1100,
+          width: "300px", height: "100vh", zIndex: 100,
           background: "var(--bg-card)", display: "none", flexDirection: "column",
           padding: "80px 32px", gap: "24px", borderLeft: "1px solid var(--border)"
         }}
@@ -218,7 +228,17 @@ const Navbar = ({ currentIndex, onNavigate, theme, toggleTheme }) => {
         </button>
         {NAV_ITEMS.map((item) => (
           <div key={item.label} className="mob-link">
-            <MobileNavBtn {...item} isActive={currentIndex === item.index} onClick={() => { onNavigate(item.index); toggleMenu(false); }} />
+            <MobileNavBtn 
+              {...item} 
+              isActive={currentIndex === item.index} 
+              onClick={() => { 
+                // FIX: Only trigger navigation if the link isn't already active
+                if (currentIndex !== item.index) {
+                  onNavigate(item.index); 
+                }
+                toggleMenu(false); // We still want the drawer to close regardless
+              }} 
+            />
           </div>
         ))}
       </div>

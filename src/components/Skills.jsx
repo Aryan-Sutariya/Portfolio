@@ -81,6 +81,7 @@ const Skills = () => {
         scale: 0.3,
         stagger: { each: 0.05, from: "center" },
         duration: 0.85,
+        delay:0.4,
         ease: "back.out(1.7)",
       });
 
