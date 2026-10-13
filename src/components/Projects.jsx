@@ -16,15 +16,23 @@ const PROJECTS = [
     live: "https://niramay-clinic.vercel.app/",
   },
   {
-    id: "02", title: "E-commerce App", subtitle: "Full-stack Storefront",
-    tags: ["React", "Vite", "localStorage"],
-    desc: "Modern React e-commerce front-end with authentication, admin panel, product browsing, and cart — built for a fashion retail experience.",
-    img: "./ecommerce.png",
-    github: "https://github.com/Aryan-Sutariya/Clone-Projects-for-Practice/tree/mono-clone",
-    live: "https://monobyaryan.netlify.app/",
+    id: "02", title: "Wine Quality Prediction With Chatbot", subtitle: "Sommelier AI & Prediction",
+    tags: ["Python", "Streamlit", "Machine Learning", "Random Forest"],
+    desc: "Interactive web app featuring an AI sommelier chat, chemical property sliders, and predictive machine learning models for wine quality assessment.",
+    img: "./winequality.png",
+    github: "https://github.com/stationofdeveloper/Wine-Quality-Prediction",
+    live: "https://wine-quality-prediction-with-chatbot.streamlit.app/",
   },
   {
-    id: "03", title: "Movie App", subtitle: "Discovery Platform",
+    id: "03", title: "Mental Health Prediction In Tech Survey", subtitle: "Tech Workforce Insights",
+    tags: ["Python", "Streamlit", "Data Science", "EDA"],
+    desc: "Data-driven dashboard exploring workplace mental health patterns across the tech industry with exploratory data analysis and predictive modeling.",
+    img: "./mentalhealth.png",
+    github: "https://github.com/stationofdeveloper/Mental-Health-Prediction-In-Tech-Survey",
+    live: "https://mental-health-prediction-in-tech-survey.streamlit.app/",
+  },
+  {
+    id: "04", title: "Movie App", subtitle: "Discovery Platform",
     tags: ["React", "React Router", "TMDB API"],
     desc: "Responsive movie & TV show discovery app with trending content, dynamic detail pages, and trailer support powered by TMDB API.",
     img: "./movieapp.png",
@@ -32,7 +40,7 @@ const PROJECTS = [
     live: "https://movieappbyaryan.netlify.app/",
   },
   {
-    id: "04", title: "Refokus Clone", subtitle: "Creative Agency Landing",
+    id: "05", title: "Refokus Clone", subtitle: "Creative Agency Landing",
     tags: ["React", "Framer Motion", "Locomotive Scroll"],
     desc: "Animated creative agency landing page with motion-rich micro-interactions, smooth scroll effects, and bold visual hierarchy.",
     img: "./refokus.png",
@@ -40,7 +48,7 @@ const PROJECTS = [
     live: "https://refokusworkbyaryan.netlify.app/",
   },
   {
-    id: "05", title: "InterVue AI", subtitle: "AI Interview Prep",
+    id: "06", title: "InterVue AI", subtitle: "AI Interview Prep",
     tags: ["Next.js", "Vapi API", "Vercel"],
     desc: "AI-powered interview & viva preparation platform that simulates technical and HR interviews, evaluates answers, and provides instant feedback.",
     img: "./intervuee.png",
@@ -48,7 +56,7 @@ const PROJECTS = [
     live: "https://intervuee.vercel.app/",
   },
   {
-    id: "06", title: "Ayubot", subtitle: "Medicine search Engine",
+    id: "07", title: "Ayubot", subtitle: "Medicine search Engine",
     tags: ["Java Script", "Netlify"],
     desc: "Clean weather dashboard with real-time data, 7-day forecast, location detection, and animated weather icons.",
     img: "./aayubot.png",
@@ -131,7 +139,7 @@ const ArrowBtn = ({ dir, onClick, disabled }) => {
 /* ── Single Project Card ── */
 const ProjectCard = ({ project, offset, isCenter, onCardClick }) => {
   const absOffset = Math.abs(offset);
-  const CARD_STEP = 102; 
+  const CARD_STEP = 102;
   const translateX = offset * CARD_STEP;
   const rotateY = offset * -18;
   const scale = isCenter ? 1 : 1 - absOffset * 0.15;
@@ -221,7 +229,7 @@ const Projects = () => {
     dragStartX.current = e.touches ? e.touches[0].clientX : e.clientX;
     dragStartY.current = e.touches ? e.touches[0].clientY : e.clientY;
     isDraggingRef.current = true;
-    
+
     // Disable App.jsx Observer so it doesn't fight us
     if (window.__observerDisable) window.__observerDisable();
   };
@@ -231,16 +239,16 @@ const Projects = () => {
     if (window.__observerEnable) window.__observerEnable();
 
     if (!isDraggingRef.current || dragStartX.current === null) return;
-    
+
     const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
     const endY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
-    
+
     const diffX = dragStartX.current - endX;
     const diffY = dragStartY.current - endY;
-    
+
     const absX = Math.abs(diffX);
     const absY = Math.abs(diffY);
-    
+
     // Determine gesture direction
     if (absX > absY && absX > 40) {
       // It's a horizontal swipe -> spin carousel
@@ -250,12 +258,12 @@ const Projects = () => {
       // diffY > 0 means swiped UP (go down to Contact, which is index 3)
       // diffY < 0 means swiped DOWN (go up to Skills, which is index 1)
       if (diffY > 0) {
-        if (window.__gotoSection) window.__gotoSection(3); 
+        if (window.__gotoSection) window.__gotoSection(3);
       } else {
-        if (window.__gotoSection) window.__gotoSection(1); 
+        if (window.__gotoSection) window.__gotoSection(1);
       }
     }
-    
+
     dragStartX.current = null;
     dragStartY.current = null;
     isDraggingRef.current = false;
@@ -267,7 +275,7 @@ const Projects = () => {
     const handler = (e) => {
       if (e.detail.index === 2) {
         setIsActiveSection(true); // Enable Keyboard support
-        
+
         const dir = e.detail.direction;
         const split = SplitText.create(".projects-title", { type: "chars" });
         gsap.from(split.chars, {
@@ -366,8 +374,8 @@ const Projects = () => {
         onTouchEnd={handlePointerUp}
         style={{
           flex: 1, width: "100%", minHeight: 0, position: "relative",
-          zIndex: 10, cursor: "grab", userSelect: "none", 
-          touchAction: "none", 
+          zIndex: 10, cursor: "grab", userSelect: "none",
+          touchAction: "none",
         }}
       >
         {PROJECTS.map((project, i) => {
